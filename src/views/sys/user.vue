@@ -5,8 +5,8 @@
         <el-input v-model="dataForm.username" placeholder="用户名" clearable />
       </el-form-item>
       <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
-        <el-button  type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button @click="searchUser()">查询</el-button>
+        <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button type="danger" :disabled="dataListSelections.length <= 0" @click="deleteHandle()">批量删除</el-button>
       </el-form-item>
     </el-form>
@@ -25,11 +25,18 @@
         width="50"
       />
       <el-table-column
+
         type="index"
         header-align="center"
         align="center"
         width="80"
-        label="ID"
+        label="序号"
+      />
+      <el-table-column
+        prop="userid"
+        header-align="center"
+        align="center"
+        label="用户ID"
       />
       <el-table-column
         prop="userName"
@@ -68,15 +75,15 @@
         label="创建时间"
       />
       <el-table-column
-        v-if="isAuth('sys:user:update')||isAuth('sys:user:delete')"
+
         header-align="center"
         align="center"
         width="150"
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.userNo)">修改</el-button>
-          <el-button v-if="isAuth('sys:user:delete')" type="text" size="small" @click="deleteHandle(scope.row.userNo)">删除</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.userid)">修改</el-button>
+          <el-button  type="text" size="small" @click="deleteHandle(scope.row.userid)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -90,13 +97,13 @@
       @current-change="currentChangeHandle"
     />
     <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList" />
+    <add-or-update  v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList" ></add-or-update>
   </div>
 </template>
 
 <script>
 import AddOrUpdate from './user-add-or-update'
-import { getUserList, deleteUser } from '@/api/user'
+import { getUserList, deleteUser, searchUser } from '@/api/user'
 export default {
   name: 'User',
   components: {
@@ -134,8 +141,16 @@ export default {
         this.dataListLoading = false
       })
     },
-    // 模糊查询
-    searchUser(val) {
+    //  模糊查询查用户名
+    searchUser() {
+      searchUser(
+        this.dataForm.username
+      ).then(data => {
+        this.dataList = data.body.users
+        this.totalPage = data.body.total
+        this.dataListLoading = false
+        console.log(this.dataForm.username)
+      })
     },
     // 每页数
     sizeChangeHandle(val) {
@@ -161,17 +176,17 @@ export default {
     },
     // 删除
     deleteHandle(id) {
-      var userNos = id ? [id] : this.dataListSelections.map(item => {
-        return item.userNo
+      var userid = id ? [id] : this.dataListSelections.map(item => {
+        return item.userid
       })
       this.$confirm(`确定进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteUser({
-          'userNos': userNos
-        }).then(data => {
+        deleteUser(
+          userid
+        ).then(data => {
           this.$message({
             message: '操作成功',
             type: 'success',

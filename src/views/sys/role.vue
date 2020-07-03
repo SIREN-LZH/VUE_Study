@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('sys:role:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('sys:role:delete')" type="danger" :disabled="dataListSelections.length <= 0" @click="deleteHandle()">批量删除</el-button>
+        <el-button  type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button  type="danger" :disabled="dataListSelections.length <= 0" @click="deleteHandle()">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -38,13 +38,13 @@
         label="角色名称"
       />
       <el-table-column
-        prop="remark"
+        prop="tip"
         header-align="center"
         align="center"
         label="备注"
       />
       <el-table-column
-        prop="createTime"
+        prop="createDate"
         header-align="center"
         align="center"
         :formatter="formatDateTime"
@@ -52,15 +52,14 @@
         label="创建时间"
       />
       <el-table-column
-        v-if="isAuth('sys:role:update')||isAuth('sys:role:delete')"
         header-align="center"
         align="center"
         width="150"
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:role:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.roleId)">修改</el-button>
-          <el-button v-if="isAuth('sys:role:delete')" type="text" size="small" @click="deleteHandle(scope.row.roleId)">删除</el-button>
+          <el-button  type="text" size="small" @click="addOrUpdateHandle(scope.row.roleId)">修改</el-button>
+          <el-button  type="text" size="small" @click="deleteHandle(scope.row.roleId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,7 +73,7 @@
       @current-change="currentChangeHandle"
     />
     <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList" />
+    <add-or-update  ref="addOrUpdate" @refreshDataList="getDataList" />
   </div>
 </template>
 
@@ -116,7 +115,7 @@ export default {
         'pageSize': this.pageSize,
         'roleName': this.dataForm.roleName
       }).then(data => {
-        this.dataList = data.body.resultList
+        this.dataList = data.body.roleDTO
         this.totalPage = data.body.total
         this.dataListLoading = false
       })

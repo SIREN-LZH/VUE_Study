@@ -17,7 +17,7 @@ export function getInfo(token) {
 
 export function getInfoById(id) {
   return request({
-    url: `/user/info/${id}`,
+    url: `/user/info/getInfoById?id=` + id,
     method: 'get'
   })
 }
@@ -59,11 +59,11 @@ export function getUserList(data) {
   })
 }
 
-export function deleteUser(data) {
+export function deleteUser(userid) {
   return request({
-    url: '/user/delete',
-    method: 'delete',
-    data: { body: data }
+    url: '/user/delete?userid=' + userid,
+    method: 'delete'
+
   })
 }
 
@@ -74,10 +74,10 @@ export function updatePassword(data) {
     data: { body: data }
   })
 }
-export function searchUser(data) {
+export function searchUser(userName) {
   return request({
-    url: '/user/search',
-    method: 'get',
-    data: { body: data }
+    url: '/user/search?username=' + userName,
+    method: 'get'
+
   })
 }

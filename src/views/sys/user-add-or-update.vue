@@ -5,8 +5,8 @@
     :visible.sync="visible"
   >
     <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="80px" @keyup.enter.native="dataFormSubmit()">
-      <el-form-item label="用户名" prop="userName">
-        <el-input v-model="dataForm.userName" placeholder="登录帐号" />
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="dataForm.username" placeholder="登录帐号" />
       </el-form-item>
       <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }">
         <el-input v-model="dataForm.password" type="password" placeholder="请输入8-16位密码" />
@@ -17,13 +17,13 @@
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="dataForm.email" placeholder="邮箱" />
       </el-form-item>
-      <el-form-item label="手机号" prop="mobile">
-        <el-input v-model="dataForm.mobile" placeholder="手机号" />
+      <el-form-item label="手机号" prop="phonenum">
+        <el-input v-model="dataForm.phonenum" placeholder="手机号" />
       </el-form-item>
       <el-form-item label="角色" size="mini" prop="roleIds">
-        <el-checkbox-group v-model="dataForm.roleIds">
-          <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId">{{ role.roleName }}</el-checkbox>
-        </el-checkbox-group>
+        <el-checkbopx-group v-model="dataForm.roleIds">
+          <el-checkbox v-model="dataForm.roleIds" v-for="role in roleList" :key="role.roleid" :label="role.roleid">{{ role.roleName }}</el-checkbox>
+        </el-checkbopx-group>
       </el-form-item>
       <el-form-item label="状态" size="mini" prop="status">
         <el-radio-group v-model="dataForm.status">
@@ -47,7 +47,7 @@ export default {
   data() {
     var validatePassword = (rule, value, callback) => {
       if (this.notNullJudge(value)) {
-        if (this.lengthNotAvalidenabled(value)) {
+        /* if (this.lengthNotAvalidenabled(value)) {
           callback(new Error('请输入8-16位的密码'))
         } else if (this.regexSprit1(value)) {
           callback(new Error('密码种类应该超过三种'))
@@ -57,7 +57,7 @@ export default {
           callback(new Error('密码中不能存在三个连续数字 ，字母，特殊字符'))
         } else {
           callback()
-        }
+        }*/
       } else {
         callback()
       }
@@ -88,19 +88,20 @@ export default {
     return {
       visible: false,
       roleList: [],
+      userList: [],
       dataForm: {
         id: 0,
-        userName: '',
+        username: '',
         password: '',
         comfirmPassword: '',
         salt: '',
         email: '',
-        mobile: '',
+        phonenum: '',
         roleIds: [],
         status: 1
       },
       dataRule: {
-        userName: [
+        username: [
           { required: true, message: '用户名不能为空', trigger: 'blur' }
         ],
         password: [
@@ -113,7 +114,7 @@ export default {
           { required: true, message: '邮箱不能为空', trigger: 'blur' },
           { validator: validateEmail, trigger: 'blur' }
         ],
-        mobile: [
+        phonenum: [
           { required: true, message: '手机号不能为空', trigger: 'blur' },
           { validator: validateMobile, trigger: 'blur' }
         ]
@@ -169,7 +170,7 @@ export default {
     init(id) {
       this.dataForm.id = id || 0
       getRoles().then(data => {
-        this.roleList = data.body
+        this.roleList = data.body.roleDTO
       }).then(() => {
         this.visible = true
         this.$nextTick(() => {
@@ -178,12 +179,12 @@ export default {
       }).then(() => {
         if (this.dataForm.id) {
           getInfoById(this.dataForm.id).then(data => {
-            this.dataForm.userName = data.body.username
-            this.dataForm.salt = data.body.salt
+            this.dataForm.username = data.body.username
+            this.dataForm.password = data.body.password
+            this.dataForm.department = data.body.department
+            this.dataForm.position = data.body.position
             this.dataForm.email = data.body.email
-            this.dataForm.mobile = data.body.mobile
-            this.dataForm.roleIds = data.body.roleIds
-            this.dataForm.status = data.body.status
+            this.dataForm.phonenum = data.body.phonenum
           })
         }
       })
@@ -193,13 +194,13 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           addOrUpdate(this.dataForm.id, {
-            'userNo': this.dataForm.id || undefined,
-            'username': this.dataForm.userName,
+            'userid': this.dataForm.id || undefined,
+            'username': this.dataForm.username,
             'password': this.dataForm.password,
-            'salt': this.dataForm.salt,
+            'department': this.dataForm.department,
+            'position': this.dataForm.position,
             'email': this.dataForm.email,
-            'mobile': this.dataForm.mobile,
-            'status': this.dataForm.status,
+            'phonenum': this.dataForm.phonenum,
             'roleIds': this.dataForm.roleIds
           }).then(data => {
             this.$message({

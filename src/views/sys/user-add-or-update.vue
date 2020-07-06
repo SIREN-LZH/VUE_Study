@@ -22,11 +22,11 @@
       </el-form-item>
       <el-form-item label="角色" size="mini" prop="roleIds">
         <el-checkbopx-group v-model="dataForm.roleIds">
-          <el-checkbox v-model="dataForm.roleIds" v-for="role in roleList" :key="role.roleid" :label="role.roleid">{{ role.roleName }}</el-checkbox>
+          <el-checkbox v-for="role in roleList" :key="role.roleid" v-model="dataForm.roleIds" :label="role.roleid">{{ role.roleName }}</el-checkbox>
         </el-checkbopx-group>
       </el-form-item>
       <el-form-item label="状态" size="mini" prop="status">
-        <el-radio-group v-model="dataForm.status">
+        <el-radio-group v-model="dataForm.isUse">
           <el-radio :label="0">禁用</el-radio>
           <el-radio :label="1">正常</el-radio>
         </el-radio-group>
@@ -53,11 +53,11 @@ export default {
           callback(new Error('密码种类应该超过三种'))
         } else if (this.notThreeEuqChar(value)) {
           callback(new Error('密码不能同时存在三个相同字符'))
-        } else if (!this.noNumCharThree(value)) {
+        } else*/ if (!this.noNumCharThree(value)) {
           callback(new Error('密码中不能存在三个连续数字 ，字母，特殊字符'))
         } else {
           callback()
-        }*/
+        }
       } else {
         callback()
       }
@@ -94,11 +94,10 @@ export default {
         username: '',
         password: '',
         comfirmPassword: '',
-        salt: '',
         email: '',
         phonenum: '',
         roleIds: [],
-        status: 1
+        isUse: 1
       },
       dataRule: {
         username: [
@@ -179,6 +178,7 @@ export default {
       }).then(() => {
         if (this.dataForm.id) {
           getInfoById(this.dataForm.id).then(data => {
+            this.dataList = data.body.users
             this.dataForm.username = data.body.username
             this.dataForm.password = data.body.password
             this.dataForm.department = data.body.department
@@ -201,7 +201,8 @@ export default {
             'position': this.dataForm.position,
             'email': this.dataForm.email,
             'phonenum': this.dataForm.phonenum,
-            'roleIds': this.dataForm.roleIds
+            'isUse': this.dataForm.isUse,
+            'roleids': this.dataForm.roleIds
           }).then(data => {
             this.$message({
               message: '操作成功',

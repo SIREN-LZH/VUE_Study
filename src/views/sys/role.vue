@@ -5,9 +5,9 @@
         <el-input v-model="dataForm.roleName" placeholder="角色名称" clearable />
       </el-form-item>
       <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
-        <el-button  type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button  type="danger" :disabled="dataListSelections.length <= 0" @click="deleteHandle()">批量删除</el-button>
+        <el-button @click="searchRole()">查询</el-button>
+        <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button type="danger" :disabled="dataListSelections.length <= 0" @click="deleteHandle()">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -58,8 +58,8 @@
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button  type="text" size="small" @click="addOrUpdateHandle(scope.row.roleId)">修改</el-button>
-          <el-button  type="text" size="small" @click="deleteHandle(scope.row.roleId)">删除</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.roleid)">修改</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row.roleid)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -73,13 +73,13 @@
       @current-change="currentChangeHandle"
     />
     <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update  ref="addOrUpdate" @refreshDataList="getDataList" />
+    <add-or-update ref="addOrUpdate" @refreshDataList="getDataList" />
   </div>
 </template>
 
 <script>
 import AddOrUpdate from './role-add-or-update'
-import { getPageRoles, deleteRole } from '@/api/role'
+import { getPageRoles, deleteRole, searchRole } from '@/api/role'
 import { formatDateTime } from '@/utils/index'
 export default {
   name: 'Role',
@@ -120,6 +120,16 @@ export default {
         this.dataListLoading = false
       })
     },
+    searchRole() {
+      this.dataListLoading = true
+      searchRole(
+        this.dataForm.roleName
+      ).then(data => {
+        this.dataList = data.body.roleDTO
+        this.totalPage = data.body.total
+        this.dataListLoading = false
+      })
+    },
     // 每页数
     sizeChangeHandle(val) {
       this.pageSize = val
@@ -144,17 +154,17 @@ export default {
     },
     // 删除
     deleteHandle(id) {
-      var ids = id ? [id] : this.dataListSelections.map(item => {
-        return item.roleId
+      var roleid = id ? [id] : this.dataListSelections.map(item => {
+        return item.roleid
       })
       this.$confirm(`确定进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteRole({
-          'roleIds': ids
-        }).then(data => {
+        deleteRole(
+          roleid
+        ).then(data => {
           this.$message({
             message: '操作成功',
             type: 'success',

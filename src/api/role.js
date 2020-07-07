@@ -17,15 +17,14 @@ export function getPageRoles(data) {
 
 export function deleteRole(ids) {
   return request({
-    url: '/role/delete',
-    method: 'delete',
-    data: { body: ids }
+    url: '/role/delete?roleid=' + ids,
+    method: 'delete'
   })
 }
 
 export function getRoleInfo(id) {
   return request({
-    url: `/role/info/${id}`,
+    url: `/role/info?id=` + id,
     method: 'get'
   })
 }
@@ -35,5 +34,12 @@ export function addOrUpdate(id, data) {
     url: `/role/${!id ? 'save' : 'update'}`,
     method: 'post',
     data: { body: data }
+  })
+}
+
+export function searchRole(rolename) {
+  return request({
+    url: '/role/search?rolename=' + rolename,
+    method: 'get'
   })
 }

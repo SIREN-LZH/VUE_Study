@@ -149,7 +149,6 @@ export default {
         this.dataList = data.body.users
         this.totalPage = data.body.total
         this.dataListLoading = false
-        console.log(this.dataForm.username)
       })
     },
     // 每页数

@@ -63,7 +63,6 @@ export function deleteUser(userid) {
   return request({
     url: '/user/delete?userid=' + userid,
     method: 'delete'
-
   })
 }
 

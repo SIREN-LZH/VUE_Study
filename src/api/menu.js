@@ -14,9 +14,9 @@ export function getMenus() {
   })
 }
 
-export function deleteMenu(menuId) {
+export function deleteMenu(menuid) {
   return request({
-    url: `/menu/delete/${menuId}`,
+    url: `/menu/delete/${menuid}`,
     method: 'delete'
   })
 }

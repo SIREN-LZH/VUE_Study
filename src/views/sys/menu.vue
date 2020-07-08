@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :inline="true" size="small" :model="dataForm">
       <el-form-item>
-        <el-button v-if="isAuth('sys:menu:save')" type="primary" icon="el-icon-circle-plus" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button  type="primary" icon="el-icon-circle-plus" @click="addOrUpdateHandle()">新增</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -13,30 +13,30 @@
       style="width: 100%; "
     >
       <el-table-column
-        prop="resourceName"
+        prop="name"
         header-align="center"
         label="名称"
       />
       <el-table-column
-        prop="resourceKey"
+        prop="id"
         header-align="center"
         align="center"
         :show-overflow-tooltip="true"
         width="200"
-        label="授权标识"
+        label="编号"
       />
       <el-table-column
-        prop="resourceUrl"
+        prop="path"
         header-align="center"
         align="center"
         :show-overflow-tooltip="true"
         label="链接"
       />
       <el-table-column
-        prop="resourceUrl"
+        prop="resourceType"
         header-align="center"
         align="center"
-        label="图标"
+        label="类型"
       >
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.resourceIcon" />
@@ -55,22 +55,14 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="resourceLevel"
-        header-align="center"
-        align="center"
-        width="80"
-        label="排序号"
-      />
-      <el-table-column
-        v-if="isAuth('sys:menu:update')||isAuth('sys:menu:delete')"
         header-align="center"
         align="center"
         width="150"
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:menu:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
-          <el-button v-if="isAuth('sys:menu:delete')" type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
+          <el-button  type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+          <el-button  type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -33,7 +33,7 @@ export function addOrUpdate(id, data) {
   return request({
     url: `/role/${!id ? 'save' : 'update'}`,
     method: 'post',
-    data: { body: data }
+    data: data
   })
 }
 

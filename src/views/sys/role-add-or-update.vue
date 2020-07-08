@@ -53,7 +53,7 @@ export default {
           { required: true, message: '角色名称不能为空', trigger: 'blur' }
         ]
       },
-      tempKey: 6666666 // 临时key, 用于解决tree半选中状态项不能传给后台接口问题. # 待优化
+      tempKey: 666666 // 临时key, 用于解决tree半选中状态项不能传给后台接口问题. # 待优化
     }
   },
   methods: {
@@ -61,7 +61,7 @@ export default {
       this.dataForm.id = id || 0
       getMenus().then(data => {
         this.menuList = treeDataTranslate(data.body, 'id')
-        this.menuIdList = data.body.menuIds
+        this.menuIdList = data.body.menuIdList
       }).then(() => {
         this.visible = true
         this.$nextTick(() => {
@@ -73,11 +73,11 @@ export default {
           getRoleInfo(this.dataForm.id).then(data => {
             this.dataForm.roleName = data.body.roleName
             this.dataForm.remark = data.body.remark
-            var idx = data.body.menuIds.indexOf(this.tempKey)
+            var idx = data.body.menuIdList.indexOf(this.tempKey)
             if (idx !== -1) {
-              data.body.menuIds.splice(idx, data.body.menuIds.length - idx)
+              data.body.menuIdList.splice(idx, data.body.menuIdList.length - idx)
             }
-            this.$refs.menuListTree.setCheckedKeys(data.body.menuIds)
+            this.$refs.menuListTree.setCheckedKeys(data.body.menuIdList)
           })
         }
       })

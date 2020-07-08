@@ -29,7 +29,13 @@
         header-align="center"
         align="center"
         width="80"
-        label="ID"
+        label="序号"
+      />
+      <el-table-column
+        prop="roleid"
+        header-align="center"
+        align="center"
+        label="角色编号"
       />
       <el-table-column
         prop="roleName"

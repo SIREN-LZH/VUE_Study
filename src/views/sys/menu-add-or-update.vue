@@ -122,7 +122,7 @@ export default {
       dataForm: {
         id: 0,
         resourceType: 1,
-        typeList: ['目录', '菜单', '按钮', '外链'],
+        typeList: ['菜单'],
         resourceName: '',
         parentId: 0,
         parentName: '',
@@ -148,7 +148,7 @@ export default {
       },
       menuList: [],
       menuListTreeProps: {
-        label: 'resourceName',
+        label: 'name',
         children: 'children'
       }
     }
@@ -190,13 +190,13 @@ export default {
     // 菜单树选中
     menuListTreeCurrentChangeHandle(data, node) {
       this.dataForm.parentId = data.id
-      this.dataForm.parentName = data.resourceName
+      this.dataForm.parentName = data.name
     },
     // 菜单树设置当前选中节点
     menuListTreeSetCurrentNode() {
       if (this.$refs.menuListTree) {
         this.$refs.menuListTree.setCurrentKey(this.dataForm.parentId)
-        this.dataForm.parentName = (this.$refs.menuListTree.getCurrentNode() || {})['resourceName']
+        this.dataForm.parentName = (this.$refs.menuListTree.getCurrentNode() || {})['name']
       }
     },
     // 表单提交

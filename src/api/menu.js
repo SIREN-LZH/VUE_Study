@@ -16,7 +16,7 @@ export function getMenus() {
 
 export function deleteMenu(menuid) {
   return request({
-    url: `/menu/delete/${menuid}`,
+    url: `/menu/delete?id=` + menuid,
     method: 'delete'
   })
 }
@@ -30,7 +30,7 @@ export function selectMenu() {
 
 export function getMenuInfo(menuId) {
   return request({
-    url: `/menu/info/${menuId}`,
+    url: `/menu/info?id=` + menuId,
     method: 'get'
   })
 }
@@ -39,6 +39,6 @@ export function menuSaveOrUpdate(id, data) {
   return request({
     url: `/menu/${!id ? 'save' : 'update'}`,
     method: 'post',
-    data: { body: data }
+    data: data
   })
 }

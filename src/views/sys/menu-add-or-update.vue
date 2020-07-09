@@ -34,11 +34,8 @@
         </el-popover>
         <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单，不选默认为一级目录" class="menu-list__input" />
       </el-form-item>
-      <el-form-item label="权限标识" prop="resourceKey">
-        <el-input v-model.trim="dataForm.resourceKey" placeholder="系统用来判断权限的唯一key" maxlength="32" />
-      </el-form-item>
-      <el-form-item v-if="dataForm.resourceType!==1&&dataForm.resourceType!==2&&dataForm.resourceType!==3" label="重定向url" prop="redirectUrl">
-        <el-input v-model.trim="dataForm.redirectUrl" placeholder="点击面包屑重定向的url, 不需要请填写noRedirect" maxlength="32" />
+      <el-form-item label="菜单类型" prop="menutype">
+        <el-input v-model.trim="dataForm.menuType" placeholder="菜单类型" />
       </el-form-item>
       <el-form-item v-if="dataForm.resourceType!==2" label="菜单图标" prop="resourceIcon">
         <el-popover
@@ -62,39 +59,20 @@
         </el-popover>
         <el-input v-model="dataForm.resourceIcon" v-popover:iconListPopover :readonly="true" placeholder="菜单图标名称" class="icon-list__input" />
       </el-form-item>
-      <el-form-item v-if="dataForm.resourceType!==2" label="地址栏url" prop="resourcePath">
-        <el-tooltip class="item" effect="dark" content="1、单页面路由地址 2、外链地址以http://或https://开头" placement="right">
-          <el-input v-model.trim="dataForm.resourcePath" placeholder="浏览器地址栏显示的url" />
-        </el-tooltip>
-      </el-form-item>
-      <el-form-item v-if="dataForm.resourceType!==2&&dataForm.resourceType!==3" label="菜单链接" prop="resourceUrl">
+      <el-form-item label="菜单链接" prop="resourceUrl">
         <el-tooltip class="item" effect="dark" content="1、一级菜单填Layout 2、包含子菜单的二级菜单填nested 3、最后子菜单填写页面对应路径" placement="right">
-          <el-input v-model.trim="dataForm.resourceUrl" placeholder="菜单对应前台页面的路径" />
+          <el-input v-model.trim="dataForm.url" placeholder="菜单对应前台页面的路径" />
         </el-tooltip>
       </el-form-item>
-      <el-form-item :label="dataForm.typeList[dataForm.resourceType] + '排序'" prop="resourceLevel">
-        <el-input v-model.number="dataForm.resourceLevel" :placeholder="dataForm.typeList[dataForm.resourceType] + '排序'" maxlength="32" />
+      <el-form-item :label="dataForm.typeList[dataForm.resourceType] + '排序'" prop="menuSort">
+        <el-input v-model.number="dataForm.sort" :placeholder="dataForm.typeList[dataForm.resourceType] + '排序'" maxlength="32" />
       </el-form-item>
       <el-form-item v-show="dataForm.type === 2" label="页面name" prop="resourcePageName">
         <el-tooltip class="item" effect="dark" content="如果前端页面开启了tagView，一定要跟页面中定义的name值保持名称一致，否则不能keep-alive" placement="right">
           <el-input v-model.trim="dataForm.resourcePageName" placeholder="前端页面定义的名称" maxlength="32" />
         </el-tooltip>
       </el-form-item>
-      <el-form-item label="是否缓存" prop="resourceCache">
-        <el-radio-group v-model="dataForm.resourceCache">
-          <el-radio :label="true">是</el-radio>
-          <el-radio :label="false">否</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="是否展示" prop="resourceShow">
-        <el-radio-group v-model="dataForm.resourceShow">
-          <el-radio :label="true">是</el-radio>
-          <el-radio :label="false">否</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="备注" prop="description">
-        <el-input v-model.trim="dataForm.description" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入备注信息" />
-      </el-form-item>
+
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -136,7 +114,13 @@ export default {
         resourceCache: true,
         resourceShow: true,
         description: '',
-        iconList: []
+        iconList: [],
+        menuid: '',
+        menuType: '',
+        menuName: '',
+        parentMenuid: '',
+        menuIcon: '',
+        sortUrl: ''
       },
       dataRule: {
         name: [
@@ -204,20 +188,13 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           menuSaveOrUpdate(this.dataForm.id, {
-            'id': this.dataForm.id || undefined,
-            'resourceType': this.dataForm.resourceType,
-            'redirectUrl': this.dataForm.redirectUrl,
-            'resourceName': this.dataForm.resourceName,
-            'parentId': this.dataForm.parentId,
-            'resourceKey': this.dataForm.resourceKey,
-            'resourceIcon': this.dataForm.resourceIcon,
-            'resourcePath': this.dataForm.resourcePath,
-            'resourceUrl': this.dataForm.resourceUrl,
-            'resourceLevel': this.dataForm.resourceLevel,
-            'resourcePageName': this.dataForm.resourcePageName,
-            'resourceCache': this.dataForm.resourceCache,
-            'resourceShow': this.dataForm.resourceShow,
-            'description': this.dataForm.description
+            'menuid': this.dataForm.id || undefined,
+            'menuType': this.dataForm.menuType,
+            'menuName': this.dataForm.resourceName,
+            'parentMenuid': this.dataForm.parentId,
+            'menuIcon': this.dataForm.resourceIcon,
+            'sortUrl': this.dataForm.url,
+            'menuSort': this.dataForm.sort
           }).then(data => {
             this.$message({
               message: '操作成功',
